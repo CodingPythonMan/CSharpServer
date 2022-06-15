@@ -6,40 +6,54 @@ namespace ServerCore
 { 
     class Program
     {
-        static int _num = 0;
-        static Mutex _lock = new Mutex();
-        
-        static void Thread_1()
+        static object _lock = new object();
+        static SpinLock _lock2 = new SpinLock();
+
+        class Reward
         {
-            for(int i=0; i<10000; i++)
-            {
-                _lock.WaitOne();
-                _num++;
-                _lock.ReleaseMutex();
-            }     
+
         }
 
-        static void Thread_2()
+        // RWLock ReaderWriteLock
+        static ReaderWriterLockSlim _lock3 = new ReaderWriterLockSlim();
+
+        static Reward GetRewardById(int id)
         {
-            for (int i = 0; i < 10000; i++)
+            _lock3.EnterReadLock();
+
+            _lock3.ExitReadLock();
+            return null;
+        }
+
+        static void AddReward(Reward reward)
+        {
+            _lock3.EnterReadLock();
+
+            _lock3.ExitReadLock();
+
+            lock (_lock)
             {
-                _lock.WaitOne();
-                _num--;
-                _lock.ReleaseMutex();
+
             }
         }
 
         static void Main(string[] args)
         {
-            Task t1 = new Task(Thread_1);
-            Task t2 = new Task(Thread_2);
+            lock (_lock)
+            {
 
-            t1.Start();
-            t2.Start();
+            }
 
-            Task.WaitAll(t1, t2);
-
-            Console.WriteLine(_num);
+            bool lockTaken = false;
+            try
+            {
+                _lock2.Enter(ref lockTaken);
+            }
+            finally
+            {
+                if (lockTaken)
+                    _lock2.Exit();
+            }
         }
     }
 }
