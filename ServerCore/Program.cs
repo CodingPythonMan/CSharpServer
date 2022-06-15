@@ -4,40 +4,52 @@ using System.Threading.Tasks;
 
 namespace ServerCore
 {
-    class Program
+    class SpinLock
     {
-        static int number = 0;
-        static object _obj = new object();
+        // volatile 가시성 확실히 보장
+        volatile int _locked = 0;
 
-        static void Thread_1()
+        public void Acquire()
         {
-            for(int i=0; i<10000; i++)
+            while (true)
             {
-                // 상호배제 Mutual Exclusive
-                // 문을 잠그는 행위
-                try
+                // Exchange는 여기다 넣어주는 역할을 하는데, 넣어주기 전 값을 체크한다.
+                int original = Interlocked.Exchange(ref _locked, 1);
+                if (original == 0)
                 {
-                    Monitor.Enter(_obj);
-                    number++;
-
-                }
-                finally
-                {
-                    // 잠금을 풀어준다.
-                    Monitor.Exit(_obj);
+                    break;
                 }
             }
         }
 
-        static void Thread_2()
+        public void Release()
+        {
+            _locked = 0;
+        }
+    }
+
+    class Program
+    {
+        static int _num = 0;
+        static SpinLock _lock = new SpinLock();
+        
+        static void Thread_1()
         {
             for(int i=0; i<10000; i++)
             {
-                Monitor.Enter(_obj);
+                _lock.Acquire();
+                _num++;
+                _lock.Release();
+            }     
+        }
 
-                number--;
-
-                Monitor.Exit(_obj);
+        static void Thread_2()
+        {
+            for (int i = 0; i < 10000; i++)
+            {
+                _lock.Acquire();
+                _num--;
+                _lock.Release();
             }
         }
 
@@ -45,12 +57,13 @@ namespace ServerCore
         {
             Task t1 = new Task(Thread_1);
             Task t2 = new Task(Thread_2);
+
             t1.Start();
             t2.Start();
 
             Task.WaitAll(t1, t2);
 
-            Console.WriteLine(number);
+            Console.WriteLine(_num);
         }
     }
 }
