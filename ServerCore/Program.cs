@@ -7,14 +7,25 @@ namespace ServerCore
     class Program
     {
         static int number = 0;
+        static object _obj = new object();
 
         static void Thread_1()
         {
-            // atomic = 원자성
             for(int i=0; i<10000; i++)
             {
-                // 성능에서 손해볼 수 있다.
-                Interlocked.Increment(ref number);
+                // 상호배제 Mutual Exclusive
+                // 문을 잠그는 행위
+                try
+                {
+                    Monitor.Enter(_obj);
+                    number++;
+
+                }
+                finally
+                {
+                    // 잠금을 풀어준다.
+                    Monitor.Exit(_obj);
+                }
             }
         }
 
@@ -22,7 +33,11 @@ namespace ServerCore
         {
             for(int i=0; i<10000; i++)
             {
-                Interlocked.Decrement(ref number);
+                Monitor.Enter(_obj);
+
+                number--;
+
+                Monitor.Exit(_obj);
             }
         }
 
