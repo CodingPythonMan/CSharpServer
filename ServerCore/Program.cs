@@ -13,10 +13,19 @@ namespace ServerCore
         {
             while (true)
             {
-                // Exchange는 여기다 넣어주는 역할을 하는데, 넣어주기 전 값을 체크한다.
-                int original = Interlocked.Exchange(ref _locked, 1);
-                if (original == 0)
-                {
+                //// Exchange는 여기다 넣어주는 역할을 하는데, 넣어주기 전 값을 체크한다.
+                //int original = Interlocked.Exchange(ref _locked, 1);
+                //if (original == 0)
+                //{
+                //    break;
+                //}
+
+                // CAS Compare-And-Swap
+                int expected = 0;
+                int desired = 1;
+              
+                if(Interlocked.CompareExchange(ref _locked, desired, expected) == expected)
+                { 
                     break;
                 }
             }
