@@ -4,43 +4,26 @@ using System.Threading.Tasks;
 
 namespace ServerCore
 {
-    class SpinLock
+    class Lock
     {
-        // volatile 가시성 확실히 보장
-        volatile int _locked = 0;
+        // bool == 커널
+        AutoResetEvent _available = new AutoResetEvent(true);
 
         public void Acquire()
         {
-            while (true)
-            {
-                //// Exchange는 여기다 넣어주는 역할을 하는데, 넣어주기 전 값을 체크한다.
-                //int original = Interlocked.Exchange(ref _locked, 1);
-                //if (original == 0)
-                //{
-                //    break;
-                //}
-
-                // CAS Compare-And-Swap
-                int expected = 0;
-                int desired = 1;
-              
-                if(Interlocked.CompareExchange(ref _locked, desired, expected) == expected)
-                { 
-                    break;
-                }
-            }
+            _available.WaitOne(); // 입장 시도
         }
 
         public void Release()
         {
-            _locked = 0;
+            _available.Set(); // flag = true
         }
     }
 
     class Program
     {
         static int _num = 0;
-        static SpinLock _lock = new SpinLock();
+        static Lock _lock = new Lock();
         
         static void Thread_1()
         {
