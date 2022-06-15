@@ -6,37 +6,20 @@ namespace ServerCore
 { 
     class Program
     {
+        static ThreadLocal<string> ThreadName = new ThreadLocal<string>();
+        
+        static void WhoAmI()
+        {
+            ThreadName.Value = $"My Name is {Thread.CurrentThread.ManagedThreadId}";
 
-        static volatile int count = 0;
-        static Lock _lock = new Lock();
+            Thread.Sleep(1000);
+
+            Console.WriteLine(ThreadName.Value);
+        }
+
         static void Main(string[] args)
         {
-            Task t1 = new Task(delegate ()
-            {
-                for(int i=0; i<10000; i++)
-                {
-                    _lock.WriteLock();
-                    count++;
-                    _lock.WriteUnLock();
-                }
-            });
-
-            Task t2 = new Task(delegate ()
-            {
-                for (int i = 0; i < 10000; i++)
-                {
-                    _lock.WriteLock();
-                    count--;
-                    _lock.WriteUnLock();
-                }
-            });
-
-            t1.Start();
-            t2.Start();
-
-            Task.WaitAll(t1, t2);
-
-            Console.WriteLine(count);
+            Parallel.Invoke(WhoAmI, WhoAmI, WhoAmI, WhoAmI, WhoAmI, WhoAmI, WhoAmI, WhoAmI);
         }
     }
 }
