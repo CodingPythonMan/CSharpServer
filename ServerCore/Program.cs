@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace ServerCore
 {
     class Program
     {
-        static void MainThread()
+        static void MainThread(object state)
         {
-            while (true)
+            for(int i=0; i<5; i++)
             {
                 Console.WriteLine("Hello Thread!");
             }
@@ -15,14 +16,32 @@ namespace ServerCore
 
         static void Main(string[] args)
         {
-            Thread t = new Thread(MainThread);
-            t.Name = "Test Thread";
-            t.IsBackground = true;
-            t.Start();
-            Console.WriteLine("Waiting for Thread!");
+            ThreadPool.SetMinThreads(1, 1);
+            ThreadPool.SetMaxThreads(5, 5);
 
-            t.Join();
-            Console.WriteLine("Hello World!");
+            for (int i = 0; i < 5; i++)
+            {
+                Task t = new Task(() => { while (true) { } });
+                t.Start();
+            }
+
+            ThreadPool.QueueUserWorkItem(MainThread);
+
+            //for (int i = 0; i < 1000; i++)
+            //{
+            //    Thread t = new Thread(MainThread);
+            //    t.Name = "Test Thread";
+            //    t.IsBackground = true;
+            //    t.Start();
+            //}
+            //Console.WriteLine("Waiting for Thread!");
+
+            //t.Join();
+            //Console.WriteLine("Hello World!");
+            while (true)
+            {
+
+            }
         }
     }
 }
