@@ -30,7 +30,6 @@ namespace ServerCore
             _recvArgs.SetBuffer(new byte[1024], 0, 1024);
 
             _sendArgs.Completed += new EventHandler<SocketAsyncEventArgs>(OnRecvCompleted);
-
             RegisterRecv();
         }
 
