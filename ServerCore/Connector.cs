@@ -6,7 +6,7 @@ using System.Text;
 
 namespace ServerCore
 {
-    class Connector
+    public class Connector
     {
         Func<Session> _sessionFactory;
 
