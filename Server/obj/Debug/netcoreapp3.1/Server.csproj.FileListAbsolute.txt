@@ -12,3 +12,6 @@ C:\Users\robol\source\repos\Server\Server\obj\Debug\netcoreapp3.1\Server.csproj.
 C:\Users\robol\source\repos\Server\Server\obj\Debug\netcoreapp3.1\Server.dll
 C:\Users\robol\source\repos\Server\Server\obj\Debug\netcoreapp3.1\Server.pdb
 C:\Users\robol\source\repos\Server\Server\obj\Debug\netcoreapp3.1\Server.genruntimeconfig.cache
+C:\Users\robol\source\repos\Server\Server\bin\Debug\netcoreapp3.1\ServerCore.dll
+C:\Users\robol\source\repos\Server\Server\bin\Debug\netcoreapp3.1\ServerCore.pdb
+C:\Users\robol\source\repos\Server\Server\obj\Debug\netcoreapp3.1\Server.csproj.CopyComplete
