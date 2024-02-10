@@ -1,11 +1,5 @@
-# GameServerTesting
-
-## Multithread Programming
-- Learn error examples that can happen when you run multi-threads.
-- Learn Cache : Temporaral Locality, Spacial Locality Example (Use Multi-demension Array)
-![image](https://user-images.githubusercontent.com/27558778/174022010-ca61f83f-c377-4982-8f8d-d2911eebf1fd.png)
-- Relization of SpinLock
-- Relization of InterLock
-
-## Networking Programming
-- Router(택배 처리장), Switch(경비실), PC(개인집) Concept
+# CSharpServer
+- 새롭게 단장해볼까 한다.
+- 지금 있는 예제들은 다 Rookiss님 강의() 를 보고 가져온 것들인데 해당 강의에서 수정한다.
+- C# Task 도 써보고 싶고, 여러가지 주제를 공부한다는 느낌으로 공부하고 해당 주제로 글을 쓰자.
+- 새롭게 알게 된 것은 여기 정리한다.
